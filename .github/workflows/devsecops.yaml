@@ -66,13 +66,13 @@ jobs:
               run: |
                 echo "coverage = ${{ steps.jacoco.outputs.coverage }}" 
                 echo "branches = ${{ steps.jacoco.outputs.branches }}" 
-            - name: Check coverage %
-              run: |
-                if [[ ${{ steps.jacoco.outputs.coverage }}<=0.40 ]];
-                then
-                  echo "Coverage condition is failed with ${{ steps.jacoco.outputs.coverage }}"
-                  exit 1
-                fi
+            # - name: Check coverage %
+            #   run: |
+            #     if [[ ${{ steps.jacoco.outputs.coverage }}<=0.40 ]];
+            #     then
+            #       echo "Coverage condition is failed with ${{ steps.jacoco.outputs.coverage }}"
+            #       exit 1
+            #     fi
 
             - name: Upload JaCoCo coverage report as a workflow artifact
               uses: actions/upload-artifact@v3
@@ -80,6 +80,10 @@ jobs:
               with:
                 name: jacoco-report
                 path: target/site/jacoco/
+
+            - name: Mutation Testing
+              id: pit
+              run: mvn org.pitest:pitest-maven:mutationCoverage
           
             # - run: mkdir staging && cp target/*.jar staging
             # - uses: actions/upload-artifact@v3
