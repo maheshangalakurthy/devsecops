@@ -68,7 +68,7 @@ jobs:
                 echo "branches = ${{ steps.jacoco.outputs.branches }}" 
             - name: Check coverage %
               run: |
-                if [[ ${{ steps.jacoco.outputs.coverage }}<=0.400 ]];
+                if [[ ${{ steps.jacoco.outputs.coverage }}*100<=40 ]];
                 then
                   echo "Coverage condition is failed with ${{ steps.jacoco.outputs.coverage }}"
                   exit 1
