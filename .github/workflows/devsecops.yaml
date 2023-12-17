@@ -12,6 +12,20 @@ jobs:
             - name: Checkout Repo
               uses: actions/checkout@v4
             
+            - name: JDK 11 Setup
+              uses: actions/setup-java@v1
+              with:
+                java-version: 11
+
+            - name: Cache MVN dependencies
+              id: mvn-cache
+              uses: actions/cache@v3
+              with:
+                path: ~/.m2/repository
+                key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+                restore-keys: |
+                  ${{ runner.os }}-maven-
+            
             - name: Build Artifact - Maven
               id: mvn-build
               run: mvn clean package -DskipTests=true
