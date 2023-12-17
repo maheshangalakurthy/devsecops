@@ -3,6 +3,15 @@ name: DevSecOps Pipeline
 on:
     workflow_dispatch: 
     push: 
+        paths-ignore:
+        # Can we use '**.md' ?
+        - 'README.md'
+        - 'SECURITY.md'
+        - 'CONTRIBUTING.md'
+        - 'CODE_OF_CONDUCT.md'
+        - 'app/README.md'
+        - 'LICENSE'
+        - '.gitignore'
         branches: 
             - development
 jobs:
@@ -33,13 +42,7 @@ jobs:
             - name: Build Artifact - Maven
               id: mvn-build
               run: mvn clean package -DskipTests=true
-            
-            - run: mkdir staging && cp target/*.jar staging
-            - uses: actions/upload-artifact@v3
-              with:
-                name: Package
-                path: staging
-
+          
             - name: Unit Tests - JUnit and JaCoCo
               id: junit-jacoco
               run: mvn test
@@ -49,6 +52,22 @@ jobs:
               if: success() || failure() # always run even if the previous step fails
               with:
                 report_paths: 'target/surefire-reports/*.xml'
+
+            - name: Add coverage to PR
+              id: jacoco
+              uses: madrapps/jacoco-report@v1.6.1
+              with:
+                paths: |
+                  ${{ github.workspace }}/target/jacoco.exec
+                token: ${{ secrets.GITHUB_TOKEN }}
+                min-coverage-overall: 40
+                min-coverage-changed-files: 60
+
+            - run: mkdir staging && cp target/*.jar staging
+            - uses: actions/upload-artifact@v3
+              with:
+                name: Package
+                path: staging
    
                   
 
