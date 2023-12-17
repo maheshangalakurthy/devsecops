@@ -30,8 +30,22 @@ jobs:
             - name: Build Artifact - Maven
               id: mvn-build
               run: mvn clean package -DskipTests=true
+            
+            - run: mkdir staging && cp target/*.jar staging
+            - uses: actions/upload-artifact@v3
+              with:
+                name: Package
+                path: staging
 
             - name: Unit Tests - JUnit and JaCoCo
               id: junit-jacoco
               run: mvn test
+
+            - name: Publish Test Results
+              uses: EnricoMi/publish-unit-test-result-action@v2
+              if: always()
+              with:
+                files: |
+                  target/surefire-reports/*.xml
+
             
