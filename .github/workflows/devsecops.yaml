@@ -69,7 +69,7 @@ jobs:
             - name: Check coverage %
               run: |
                 echo "the secret number is ${{ steps.jacoco.outputs.coverage }}"
-                if [[ ${{ steps.jacoco.outputs.coverage }}<=40 ]];
+                if [[ ${{ steps.jacoco.outputs.coverage }}<=0.4 ]];
                 then
                   echo "coverage is leaas than 40%"
                   exit 1
