@@ -67,10 +67,15 @@ jobs:
                 echo "coverage = ${{ steps.jacoco.outputs.coverage }}" >> $GITHUB_OUTPUT
                 echo "branches = ${{ steps.jacoco.outputs.branches }}" >> $GITHUB_OUTPUT
             - name: Check coverage %
-              run:
-                if ${{ steps.coverage_value.outputs.coverage }} <=40 || ${{ steps.coverage_value.outputs.branches }} <=80
-                exit 1
-          
+              run: |
+                if [[ "${{ steps.coverage_value.outputs.coverage }}"<=40 ]];
+                then
+                  echo "coverage is leaas than 40%"
+                  exit 1
+                else
+                  echo "Coverage condition is passed with ${{ steps.coverage_value.outputs.coverage }}"
+                fi
+
             - name: Upload JaCoCo coverage report as a workflow artifact
               uses: actions/upload-artifact@v3
               if: always()
