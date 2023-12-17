@@ -64,26 +64,18 @@ jobs:
             - name: Log coverage percentages to workflow output
               id: coverage_value
               run: |
-                echo "coverage = ${{ steps.jacoco.outputs.coverage }}" >> "$GITHUB_OUTPUT"
-            - id: sets-a-secret
-              name: Generate, mask, and output a secret
+                echo "coverage = ${{ steps.jacoco.outputs.coverage }}" 
+                echo "branches = ${{ steps.jacoco.outputs.branches }}" 
+            - name: Check coverage %
               run: |
-                  the_secret=$((RANDOM))
-                  echo "::add-mask::$the_secret"
-                  echo "secret-number=$the_secret" >> "$GITHUB_OUTPUT"
-            - name: Use that secret output (protected by a mask)
-              run: |
-                  echo "the secret number is ${{ steps.sets-a-secret.outputs.secret-number }}"
-            # - name: Check coverage %
-            #   run: |
-            #     echo "${{ steps.coverage_value.outputs.coverage }}"
-            #     # if [[ ${{ steps.coverage_value.outputs.coverage }}<=40 ]];
-            #     # then
-            #     #   echo "coverage is leaas than 40%"
-            #     #   exit 1
-            #     # else
-            #     #   echo "Coverage condition is passed with ${{ steps.coverage_value.outputs.coverage }}"
-            #     # fi
+                echo "the secret number is ${{ steps.jacoco.outputs.coverage }}"
+                if [[ ${{ steps.jacoco.outputs.coverage }}<=40 ]];
+                then
+                  echo "coverage is leaas than 40%"
+                  exit 1
+                else
+                  echo "Coverage condition is passed with ${{ steps.coverage_value.outputs.coverage }}"
+                fi
 
             - name: Upload JaCoCo coverage report as a workflow artifact
               uses: actions/upload-artifact@v3
