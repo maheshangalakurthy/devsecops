@@ -64,8 +64,7 @@ jobs:
             - name: Log coverage percentages to workflow output
               id: coverage_value
               run: |
-                echo "coverage = ${{ steps.jacoco.outputs.coverage }}" >> $GITHUB_OUTPUT
-                echo "branches = ${{ steps.jacoco.outputs.branches }}" >> $GITHUB_OUTPUT
+                echo "coverage = ${{ steps.jacoco.outputs.coverage }}" >> "$GITHUB_OUTPUT"
             - name: Check coverage %
               run: |
                 echo "the secret number is ${{ steps.coverage_value.outputs.coverage }}"
