@@ -15,4 +15,8 @@ jobs:
             - name: Build Artifact - Maven
               id: mvn-build
               run: mvn clean package -DskipTests=true
+
+            - name: Unit Tests - JUnit and JaCoCo
+              id: junit-jacoco
+              run: mvn test
             
