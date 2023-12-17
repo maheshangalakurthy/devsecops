@@ -90,6 +90,9 @@ jobs:
               with:
                 github_token: ${{ secrets.GITHUB_TOKEN }}
                 publish_dir: ./target/pit-reports/*/
+                user_name: ${{ github.actor }}
+                user_email: ${{ github.actor }}@users.noreply.github.com
+                commit_message: "Publish PIT mutation testing results"
           
             # - run: mkdir staging && cp target/*.jar staging
             # - uses: actions/upload-artifact@v3
