@@ -68,13 +68,10 @@ jobs:
                 echo "branches = ${{ steps.jacoco.outputs.branches }}" 
             - name: Check coverage %
               run: |
-                if [[ ${{ steps.jacoco.outputs.coverage }}*100<=40 ]];
+                if [[ ${{ steps.jacoco.outputs.coverage }}<=0.40 ]];
                 then
                   echo "Coverage condition is failed with ${{ steps.jacoco.outputs.coverage }}"
                   exit 1
-                else
-                  echo "Coverage condition is Passed with ${{ steps.jacoco.outputs.coverage }}"
-                  
                 fi
 
             - name: Upload JaCoCo coverage report as a workflow artifact
