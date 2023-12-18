@@ -86,6 +86,7 @@ jobs:
               id: pit
               run: |
                 mvn org.pitest:pitest-maven:mutationCoverage
+                tree
             
             - name: Setup Pages
               uses: actions/configure-pages@v4
@@ -94,7 +95,7 @@ jobs:
               uses: actions/upload-pages-artifact@v2
               with:
                 # Upload entire repository
-                path: './target/pit-reports/*'
+                path: './target/pit-reports/'
 
             - name: Deploy to GitHub Pages
               id: deployment
