@@ -92,7 +92,12 @@ jobs:
 
             - name: Mutation Testing
               id: pit
-              run: mvn org.pitest:pitest-maven:mutationCoverage
+              run: |
+                mvn org.pitest:pitest-maven:mutationCoverage
+                ls -ltra
+                tree
+                find . -type f
+
             
             - name: Setup Pages
               uses: actions/configure-pages@v4
@@ -106,7 +111,7 @@ jobs:
             - name: Deploy to GitHub Pages
               id: deployment
               uses: actions/deploy-pages@v3
-              
+
 
       
           
