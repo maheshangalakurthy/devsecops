@@ -65,11 +65,18 @@ jobs:
                 reporter: java-junit
                 fail-on-error: true
 
-            - name: Archive JaCoCo Report
-              uses: actions/upload-artifact@v2
+            - name: JaCoCo Code Coverage Report
+              id: jacoco_reporter
+              uses: PavanMudigonda/jacoco-reporter@v4.9
               with:
-                name: jacoco-report
-                path: target/site/jacoco
+                coverage_results_path: target/site/jacoco/jacoco.xml
+                coverage_report_name: Coverage
+                coverage_report_title: JaCoCo
+                github_token: ${{ secrets.GITHUB_TOKEN }}
+                skip_check_run: false
+                minimum_coverage: 40
+                fail_below_threshold: false
+                publish_only_summary: false
             
             # - name: Generate JaCoCo badge
             #   id: jacoco
@@ -79,11 +86,11 @@ jobs:
             #       generate-branches-badge: true
             #       generate-summary: true
           
-            - name: Log coverage percentages to workflow output
-              id: coverage_value
-              run: |
-                echo "coverage = ${{ steps.jacoco.outputs.coverage }}" 
-                echo "branches = ${{ steps.jacoco.outputs.branches }}" 
+            # - name: Log coverage percentages to workflow output
+            #   id: coverage_value
+            #   run: |
+            #     echo "coverage = ${{ steps.jacoco.outputs.coverage }}" 
+            #     echo "branches = ${{ steps.jacoco.outputs.branches }}" 
             # - name: Check coverage %
             #   run: |
             #     if [[ ${{ steps.jacoco.outputs.coverage }}<=0.40 ]];
@@ -92,34 +99,33 @@ jobs:
             #       exit 1
             #     fi
 
-            - name: Upload JaCoCo coverage report as a workflow artifact
-              uses: actions/upload-artifact@v3
-              if: always()
-              with:
-                name: jacoco-report
-                path: target/site/jacoco/
+            # - name: Upload JaCoCo coverage report as a workflow artifact
+            #   uses: actions/upload-artifact@v3
+            #   if: always()
+            #   with:
+            #     name: jacoco-report
+            #     path: target/site/jacoco/
 
             - name: Mutation Testing
               id: pit
               run: |
                 mvn org.pitest:pitest-maven:mutationCoverage
-                ls -ltra
                 tree
                
 
             
-            - name: Setup Pages
-              uses: actions/configure-pages@v4
+            # - name: Setup Pages
+            #   uses: actions/configure-pages@v4
 
-            - name: Upload artifact
-              uses: actions/upload-pages-artifact@v2
-              with:
-                # Upload entire repository
-                path: './target/pit-reports'
+            # - name: Upload artifact
+            #   uses: actions/upload-pages-artifact@v2
+            #   with:
+            #     # Upload entire repository
+            #     path: './target/pit-reports'
 
-            - name: Deploy to GitHub Pages
-              id: deployment
-              uses: actions/deploy-pages@v3
+            # - name: Deploy to GitHub Pages
+            #   id: deployment
+            #   uses: actions/deploy-pages@v3
 
 
       
