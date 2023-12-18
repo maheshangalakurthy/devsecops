@@ -102,10 +102,11 @@ jobs:
               with:
                 # Upload entire repository
                 path: '**/target/pit-reports/**/mutations.xml'
-                
+
             - name: Deploy to GitHub Pages
               id: deployment
               uses: actions/deploy-pages@v3
+              
       
           
             # - run: mkdir staging && cp target/*.jar staging
