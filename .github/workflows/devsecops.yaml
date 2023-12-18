@@ -87,12 +87,11 @@ jobs:
               run: |
                 mvn org.pitest:pitest-maven:mutationCoverage
             
-            - name: Mutation Annotation Report
-              uses: johanholmerin/mutation-report-action@0.2.0
-              if: always()
+            - name: Deploy
+              uses: peaceiris/actions-gh-pages@v3
               with:
-                repo-token: '${{ secrets.GITHUB_TOKEN }}'
-                report-json: './reports/mutation/mutation.json' # Optional, default
+                github_token: ${{ secrets.GITHUB_TOKEN }}
+                publish_dir: ./target/pit-reports/*/
    
             # - name: Setup Pages
             #   uses: actions/configure-pages@v4
