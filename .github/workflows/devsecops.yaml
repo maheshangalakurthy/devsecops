@@ -33,11 +33,11 @@ jobs:
             - name: Checkout Repo
               uses: actions/checkout@v4
             
-            # - name: JDK 11 Setup
-            #   uses: actions/setup-java@v4
-            #   with:
-            #     distribution: 'zulu'
-            #     java-version: 11
+            - name: JDK 11 Setup
+              uses: actions/setup-java@v4
+              with:
+                distribution: 'zulu'
+                java-version: 11
 
             - name: Cache MVN dependencies
               id: mvn-cache
@@ -66,6 +66,7 @@ jobs:
                 fail-on-error: true
 
             - name: JaCoCo Code Coverage Report
+              if: always()
               id: jacoco_reporter
               uses: PavanMudigonda/jacoco-reporter@v4.9
               with:
@@ -77,43 +78,29 @@ jobs:
                 minimum_coverage: 40
                 fail_below_threshold: false
                 publish_only_summary: false
-            
-            # - name: Generate JaCoCo badge
-            #   id: jacoco
-            #   uses: cicirello/jacoco-badge-generator@v2
-            #   with:
-            #       badges-directory: badges
-            #       generate-branches-badge: true
-            #       generate-summary: true
-          
-            # - name: Log coverage percentages to workflow output
-            #   id: coverage_value
-            #   run: |
-            #     echo "coverage = ${{ steps.jacoco.outputs.coverage }}" 
-            #     echo "branches = ${{ steps.jacoco.outputs.branches }}" 
-            # - name: Check coverage %
-            #   run: |
-            #     if [[ ${{ steps.jacoco.outputs.coverage }}<=0.40 ]];
-            #     then
-            #       echo "Coverage condition is failed with ${{ steps.jacoco.outputs.coverage }}"
-            #       exit 1
-            #     fi
 
-            # - name: Upload JaCoCo coverage report as a workflow artifact
-            #   uses: actions/upload-artifact@v3
-            #   if: always()
-            #   with:
-            #     name: jacoco-report
-            #     path: target/site/jacoco/
+            - name: Add Coverage Job Summary
+              run: echo "${{ steps.jacoco_reporter.outputs.coverageSummary }}" >> $GITHUB_STEP_SUMMARY
+
+            - name: Upload Code Coverage Artifacts
+              uses: actions/upload-artifact@v2
+              with:
+                name: code-coverage-report-markdown
+                path: */coverage-results.md 
+                retention-days: 1  
 
             - name: Mutation Testing
               id: pit
               run: |
                 mvn org.pitest:pitest-maven:mutationCoverage
-                tree
-               
-
             
+            - name: Mutation Annotation Report
+              uses: johanholmerin/mutation-report-action@0.2.0
+              if: always()
+              with:
+                repo-token: '${{ secrets.GITHUB_TOKEN }}'
+                report-json: './reports/mutation/mutation.json' # Optional, default
+   
             # - name: Setup Pages
             #   uses: actions/configure-pages@v4
 
