@@ -64,14 +64,20 @@ jobs:
                 path: target/surefire-reports/*.xml
                 reporter: java-junit
                 fail-on-error: true
-            
-            - name: Generate JaCoCo badge
-              id: jacoco
-              uses: cicirello/jacoco-badge-generator@v2
+
+            - name: Archive JaCoCo Report
+              uses: actions/upload-artifact@v2
               with:
-                  badges-directory: badges
-                  generate-branches-badge: true
-                  generate-summary: true
+                name: jacoco-report
+                path: target/site/jacoco
+            
+            # - name: Generate JaCoCo badge
+            #   id: jacoco
+            #   uses: cicirello/jacoco-badge-generator@v2
+            #   with:
+            #       badges-directory: badges
+            #       generate-branches-badge: true
+            #       generate-summary: true
           
             - name: Log coverage percentages to workflow output
               id: coverage_value
