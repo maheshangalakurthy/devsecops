@@ -14,15 +14,21 @@ on:
         - '.gitignore'
         branches: 
             - development
+permissions:
+  checks: write
+  pull-requests: write
+  pages: write
+  contents: read
+  id-token: write
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 jobs:
     ci-build-pipeline:
         runs-on: ubuntu-20.04
-        permissions:
-          checks: write
-          pull-requests: write
-          pages: write
-          contents: read
-          id-token: write
+        environment:
+          name: github-pages
+          url: ${{ steps.deployment.outputs.page_url }}
         steps:
             - name: Checkout Repo
               uses: actions/checkout@v4
@@ -88,14 +94,19 @@ jobs:
               id: pit
               run: mvn org.pitest:pitest-maven:mutationCoverage
             
-            - name: Publish PIT Tests to github pages
-              uses: peaceiris/actions-gh-pages@v3
+            - name: Setup Pages
+              uses: actions/configure-pages@v4
+
+            - name: Upload artifact
+              uses: actions/upload-pages-artifact@v2
               with:
-                github_token: ${{ secrets.GITHUB_TOKEN }}
-                publish_dir: ./target/pit-reports/*/
-                user_name: ${{ github.actor }}
-                user_email: ${{ github.actor }}@users.noreply.github.com
-                commit_message: "Publish PIT mutation testing results"
+                # Upload entire repository
+                path: '**/target/pit-reports/**/mutations.xml'
+                
+            - name: Deploy to GitHub Pages
+              id: deployment
+              uses: actions/deploy-pages@v3
+      
           
             # - run: mkdir staging && cp target/*.jar staging
             # - uses: actions/upload-artifact@v3
