@@ -108,9 +108,9 @@ jobs:
                 # Upload entire repository
                 path: './target/pit-reports'
 
-            # - name: Deploy to GitHub Pages
-            #   id: deployment
-            #   uses: actions/deploy-pages@v3
+            - name: Deploy to GitHub Pages
+              id: deployment
+              uses: actions/deploy-pages@v3
 
 
       
