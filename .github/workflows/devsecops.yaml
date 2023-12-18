@@ -106,7 +106,7 @@ jobs:
               uses: actions/upload-pages-artifact@v2
               with:
                 # Upload entire repository
-                path: './target/pit-reports/**/index.html'
+                path: './target/pit-reports/2023*/index.html'
 
             # - name: Deploy to GitHub Pages
             #   id: deployment
