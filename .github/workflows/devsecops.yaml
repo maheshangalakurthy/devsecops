@@ -56,39 +56,24 @@ jobs:
               id: junit-jacoco
               run: mvn test
 
-            # - name: JUnit Report
-            #   uses: dorny/test-reporter@v1
-            #   if: always()
-            #   with:
-            #     name: Maven Tests
-            #     path: target/surefire-reports/*.xml
-            #     reporter: java-junit
-            #     fail-on-error: true
-
-            - name: Publish Report
-              uses: turing85/publish-report@v1
-              if: ${{ always() }}
+            - name: JUnit Report
+              uses: dorny/test-reporter@v1
+              if: always()
               with:
-                # cancel-workflow-on-error: 'false' # If we do not want to cancel the whole workflow execution on error
-                # checkout: 'true' # not needed; project is already checked out 
-                comment-header: my-comment-header
-                comment-message-success: |
-                  YAY! {0} passed!  
-                  
-                  {1} tests were successful, {2} tests failed, {3} test were skipped.
-                  
-                  The report can be found [here]({4}).
+                name: Maven Tests
+                path: target/surefire-reports/*.xml
+                reporter: java-junit
+                fail-on-error: true
 
-                comment-message-failure: |
-                  On no! {0} failed!  
-
-                  {1} tests were successful, {2} tests failed, {3} test were skipped.
-
-                  The report can be found [here]({4}).
-                report-fail-on-error: true # to fail when tests failed
-                report-name: Tests
-                report-path: '**/target/surefire-reports/*.xml'
-                report-reporter: java-junit
+            # - name: Publish Report
+            #   uses: turing85/publish-report@v1
+            #   if: ${{ always() }}
+            #   with:
+            #     comment-header: my-comment-header
+            #     report-fail-on-error: true # to fail when tests failed
+            #     report-name: Tests
+            #     report-path: '**/target/surefire-reports/*.xml'
+            #     report-reporter: java-junit
 
             - name: JaCoCo Code Coverage Report
               if: always()
@@ -111,29 +96,11 @@ jobs:
               id: pit
               run: |
                 mvn org.pitest:pitest-maven:mutationCoverage
-                tree
-            
-            - name: Setup Pages
-              uses: actions/configure-pages@v4
-
-            - name: Upload artifact
-              uses: actions/upload-pages-artifact@v2
+            - name: Upload Pitest to Artifacts
+              uses: actions/upload-artifact@v2
               with:
-                # Upload entire repository
-                path: './target/pit-reports/'
-
-            - name: Deploy to GitHub Pages
-              id: deployment
-              uses: actions/deploy-pages@v3
-
-
-      
-          
-            # - run: mkdir staging && cp target/*.jar staging
-            # - uses: actions/upload-artifact@v3
-            #   with:
-            #     name: Package
-            #     path: staging
+                name: pitest-mutation-testing
+                path: target/pit-reports/**/* 
    
                   
 
