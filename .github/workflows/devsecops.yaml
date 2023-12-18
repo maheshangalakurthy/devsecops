@@ -56,11 +56,14 @@ jobs:
               id: junit-jacoco
               run: mvn test
 
-            - name: Publish Test Report
-              uses: mikepenz/action-junit-report@v4
+            - name: JUnit Report
+              uses: dorny/test-reporter@v1
               if: always()
               with:
-                report_paths: 'target/surefire-reports/*.xml'
+                name: Maven Tests
+                path: target/surefire-reports/*.xml
+                reporter: java-junit
+                fail-on-error: true
             
             - name: Generate JaCoCo badge
               id: jacoco
