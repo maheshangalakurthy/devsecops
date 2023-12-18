@@ -20,6 +20,7 @@ jobs:
         permissions:
           checks: write
           pull-requests: write
+          pages: write
         steps:
             - name: Checkout Repo
               uses: actions/checkout@v4
@@ -85,7 +86,7 @@ jobs:
               id: pit
               run: mvn org.pitest:pitest-maven:mutationCoverage
             
-            - name: Deploy
+            - name: Publish PIT Tests to github pages
               uses: peaceiris/actions-gh-pages@v3
               with:
                 github_token: ${{ secrets.GITHUB_TOKEN }}
